@@ -1,0 +1,136 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "A dot plot example depicting the distribution of animal sleep times.",
+  "width": 700,
+  "padding": 5,
+
+  "signals": [
+    {
+      "name": "step", "value": 0.5
+    },
+    {
+      "name": "offset", "value": "zero",
+      "bind": {"input": "radio", "options": ["zero", "center"]}
+    },
+    {"name": "size", "update": "scale('x', step) - scale('x', 0)"},
+    {"name": "area", "update": "size * size"},
+    {"name": "ddh", "update": "(span(ddext) + 1) * size"},
+    {"name": "hdh", "update": "(span(hdext) + 1) * size"},
+    {"name": "height", "update": "max(ddh, hdh)"}
+  ],
+
+  "data": [
+    {
+      "name": "points",
+      "values": [
+        1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,7,7,7,7,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11,11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12,12,12,12,12,13,13,13,13,13,13,13,13,13,13,13,14,14,14,14,14,14,14,14,14,15,15,15,15,15,15,15,15,15,15,15,16,16,16,16,16,16,16,16,17,17,17,17,17,17,18,18,18,18,18,18,18,18,19,19,19,19,19,19,19,20,20,20,20,20,21,21,21,21,22,22,22,22,23,23,23,24,24,25
+      ],
+      "transform": [
+ {
+          "type": "dotbin",
+          "field": "data"
+        },
+        {
+          "type": "stack",
+          "groupby": ["bin"],
+          "offset": {"signal": "offset"},
+          "as": ["d0", "d1"]
+        },
+        {
+          "type": "extent",
+          "field": "d1",
+          "signal": "ddext"
+        },
+        {
+          "type": "extent",
+          "field": "data",
+          "signal": "ext"
+        },
+        {
+          "type": "bin",
+          "field": "data",
+          "step": {"signal": "step"},
+          "extent": {"signal": "ext"}
+        },
+        {
+          "type": "stack",
+          "offset": {"signal": "offset"},
+          "groupby": ["bin0"]
+        },
+        {
+          "type": "extent",
+          "field": "y0",
+          "signal": "hdext"
+        }
+      ]
+    }
+  ],
+
+  "params": [
+    {
+      "name": "highlight",
+      "select": {"type": "point", "on": "mouseover"}
+    },
+    {"name": "select", "select": "point"}
+  ],
+
+  "scales": [
+    {
+      "name": "x",
+      "domain": [1, 27],
+      "range": "width"
+    },
+    {
+      "name": "ddy",
+      "domain": {"signal": "[0, ddh / size]"},
+      "range": {"signal": "[height, height - ddh]"}
+    },
+    {
+      "name": "hdy",
+      "domain": {"signal": "[0, hdh / size]"},
+      "range": {"signal": "[height, height - hdh]"}
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "group",
+      "encode": {
+        "update": {
+          "x": {"signal": "width + 10"},
+          "width": {"signal": "width"},
+          "height": {"signal": "height"}
+        }
+      },
+      "axes": [
+        {"scale": "x", "orient": "bottom", "tickCount": 27, "title": "Fights Won"}
+      ],
+      "marks": [
+        {
+          "type": "symbol",
+          "from": {
+            "data": "points"
+          },
+          "encode": {
+            "update": {
+              "x": {
+                "scale": "x",
+                "signal": "(datum.bin0 + datum.bin1) / 2"
+              },
+              "y": {
+                "scale": "hdy",
+                "signal": "datum.y0 + 0.5"
+              },
+              "size": {
+                "signal": "area"
+              },
+              "fill": {
+                "value": "lightblue"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

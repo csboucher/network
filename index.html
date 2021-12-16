@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <title>Bison Fighting</title>
+</head>
+
+<body>
+<h1>Homework #5</h1>
+<h3></h3><p></p>
+<h2>Bison Dominance: This data shows a two month time period where bison were observed and their aggressive behavior was recorded .
+    This data set only inlcudes aggressive interactions where the winner and looser could be catagoized unambiguously.
+    This data was collected in Moiese, Montana by Dale F Lott and can be found at https://bansallab.github.io/asnr/data.html.</h2>
+
+<h3>Hypothesis: I hypothesize that there is a clear dominant bison within this pack which will be shown by a large number of
+    wins compared to the other bison in the herd.
+
+    The matrix show the network from bison number 1-25 and their total numbers of aggresive interactions. This starts to
+    show more of a pattern but there is still not a clear dominant bison
+
+    The first dot plot shows the 1-25 bison and the number of aggressive interactions they won.The second shows the Bison number and
+    number of losses.
+
+</h3>
+
+    <div id="matrix_plot"></div>
+    <div id="dot_plot"></div>
+    <div id="dot_plot2"></div>
+\
+<script>
+    vega.scheme('colblndfr', ['#03E6B8','#F07D4D', '#F0AB0E', '#2024E0', '#D400DB' ]);
+
+    const spec_matrix_network = "network_matrix.vg.json";
+    vegaEmbed("#matrix_plot", spec_matrix_network)
+        .then(result => console.log(result))
+        .catch(console.warn);
+
+    const spec_dot_plot = "dot_plot.vg.json";
+    vegaEmbed("#dot_plot", spec_dot_plot)
+        .then(result => console.log(result))
+        .catch(console.warn);
+
+    const spec_dot_plot2 = "dot_plot2.vg.json";
+    vegaEmbed("#dot_plot2", spec_dot_plot2)
+        .then(result => console.log(result))
+        .catch(console.warn);
+
+</script>
+
+
+</body>
